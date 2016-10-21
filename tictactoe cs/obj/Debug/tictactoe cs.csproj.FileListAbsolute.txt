@@ -1,0 +1,9 @@
+D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\bin\Debug\tictactoe cs.exe.config
+D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\bin\Debug\tictactoe cs.exe
+D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\bin\Debug\tictactoe cs.pdb
+D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\obj\Debug\tictactoe cs.csprojResolveAssemblyReference.cache
+D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\obj\Debug\tictactoe_cs.game.resources
+D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\obj\Debug\tictactoe_cs.Properties.Resources.resources
+D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\obj\Debug\tictactoe cs.csproj.GenerateResource.Cache
+D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\obj\Debug\tictactoe cs.exe
+D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\obj\Debug\tictactoe cs.pdb
