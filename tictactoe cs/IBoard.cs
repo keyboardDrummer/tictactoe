@@ -2,6 +2,6 @@
 {
 	interface IBoard
 	{
-		bool? GetPositions(int x, int y);
+		bool? GetPosition(Position position);
 	}
 }

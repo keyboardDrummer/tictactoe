@@ -12,9 +12,9 @@ namespace tictactoe_cs
 		int moveCounter = 0;
 		private IAI _iai = new RandomIai();
 
-		public bool? GetPositions(int x, int y)
+		public bool? GetPosition(Position position)
 		{
-			switch (matrix[x][y].display)
+			switch (matrix[position.R][position.C].display)
 			{
 				case ' ':
 					return null;

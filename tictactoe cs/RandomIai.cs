@@ -9,8 +9,8 @@ namespace tictactoe_cs
 		{
 			var emptyCells =
 				Enumerable.Range(0, 9)
-					.Select(index => new Position {R = index%3, C = index/3})
-					.Where(b => board.GetPositions(b.R, b.C) == null)
+					.Select(index => new Position (index%3, index/3))
+					.Where(b => board.GetPosition(b) == null)
 					.ToList();
 			var chosenCell = new Random().Next(emptyCells.Count);
 			return emptyCells[chosenCell];
