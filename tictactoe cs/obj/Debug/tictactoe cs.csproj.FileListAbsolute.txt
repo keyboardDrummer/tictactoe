@@ -7,3 +7,6 @@ D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\obj\Debug\tictactoe_cs.Pr
 D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\obj\Debug\tictactoe cs.csproj.GenerateResource.Cache
 D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\obj\Debug\tictactoe cs.exe
 D:\src\Craftsmanship\2016-10 TicTacToe\C#\tictactoe cs\obj\Debug\tictactoe cs.pdb
+D:\sandboxes\tictactoe\tictactoe cs\bin\Debug\tictactoe cs.exe.config
+D:\sandboxes\tictactoe\tictactoe cs\obj\Debug\tictactoe cs.exe
+D:\sandboxes\tictactoe\tictactoe cs\obj\Debug\tictactoe cs.pdb
