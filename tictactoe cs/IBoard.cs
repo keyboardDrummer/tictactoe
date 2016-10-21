@@ -1,6 +1,6 @@
 ﻿namespace tictactoe_cs
 {
-	interface IBoard
+	public interface IBoard
 	{
 		bool? GetPosition(Position position);
 	}

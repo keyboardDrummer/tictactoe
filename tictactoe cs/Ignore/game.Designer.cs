@@ -1,6 +1,6 @@
 ﻿namespace tictactoe_cs
 {
-    partial class game
+    partial class Game
     {
         /// <summary>
         /// Required designer variable.
@@ -58,7 +58,7 @@
             this.Controls.Add(this.grid1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "game";
+            this.Name = "Game";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "tictactoe";
             this.ResumeLayout(false);

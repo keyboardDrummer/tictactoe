@@ -16,7 +16,7 @@ namespace tictactoe_cs
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new game());
+            Application.Run(new Game());
         }
     }
 }

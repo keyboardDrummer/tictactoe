@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace tictactoe_cs
 {
-    public partial class game : Form
+    public partial class Game : Form
     {
-        public game()
+        public Game()
         {
             InitializeComponent();
         }
