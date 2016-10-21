@@ -17,5 +17,9 @@ namespace tictactoe_cs
 			var chosenCell = Random.Next(emptyCells.Count);
 			return emptyCells[chosenCell];
 		}
+
+		public void Learn(IBoard board, bool youWon)
+		{
+		}
 	}
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reactive.Linq;
+﻿using System.Collections.Generic;
 
 namespace tictactoe_cs
 {
@@ -30,11 +28,11 @@ namespace tictactoe_cs
 		public IAI FindWinner(bool firstBegins)
 		{
 			var board = new Board();
-			Func<IAI, IAI> getNext = player => player == First ? Second : First;
 			var currentPlayer = firstBegins ? First : Second;
 			var boardPerPlayer = new Dictionary<IAI, IBoard> {
-				{ currentPlayer, board},
-				{ getNext(currentPlayer), new FlippedBoard(board)}};
+				{ currentPlayer, board },
+				{ GetNextPlayer(currentPlayer), new FlippedBoard(board)}};
+
 			while (board.CanPlay())
 			{
 				var playerBoard = boardPerPlayer[currentPlayer];
@@ -43,11 +41,20 @@ namespace tictactoe_cs
 				var winState = playerBoard.HasWon();
 				if (winState != null)
 				{
-					return winState.Value ? currentPlayer : getNext(currentPlayer);
+					var winner = winState.Value ? currentPlayer : GetNextPlayer(currentPlayer);
+					winner.Learn(boardPerPlayer[winner], true);
+					var loser = GetNextPlayer(winner);
+					loser.Learn(boardPerPlayer[loser], false);
+					return winner;
 				}
-				currentPlayer = getNext(currentPlayer);
+				currentPlayer = GetNextPlayer(currentPlayer);
 			}
 			return null;
+		}
+
+		IAI GetNextPlayer(IAI player)
+		{
+			return player == First ? Second : First;
 		}
 	}
 }
