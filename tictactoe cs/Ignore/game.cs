@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using tictactoe_cs.Ignore;
 
 namespace tictactoe_cs
 {
@@ -21,5 +22,11 @@ namespace tictactoe_cs
         {
             grid1.newGame();
         }
-    }
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+			var window = new StatisticsGraph();
+			window.Show(this);
+		}
+	}
 }

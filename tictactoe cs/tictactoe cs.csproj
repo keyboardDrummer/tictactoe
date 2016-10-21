@@ -82,6 +82,12 @@
     </Compile>
     <Compile Include="IAI.cs" />
     <Compile Include="IBoard.cs" />
+    <Compile Include="Ignore\StatisticsGraph.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ignore\StatisticsGraph.Designer.cs">
+      <DependentUpon>StatisticsGraph.cs</DependentUpon>
+    </Compile>
     <Compile Include="Position.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

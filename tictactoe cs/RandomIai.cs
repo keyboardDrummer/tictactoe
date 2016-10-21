@@ -5,6 +5,8 @@ namespace tictactoe_cs
 {
 	class RandomIai : IAI
 	{
+		readonly Random _random = new Random();
+
 		public Position Step(IBoard board)
 		{
 			var emptyCells =
@@ -12,7 +14,7 @@ namespace tictactoe_cs
 					.Select(index => new Position (index%3, index/3))
 					.Where(b => board.GetPosition(b) == null)
 					.ToList();
-			var chosenCell = new Random().Next(emptyCells.Count);
+			var chosenCell = _random.Next(emptyCells.Count);
 			return emptyCells[chosenCell];
 		}
 	}

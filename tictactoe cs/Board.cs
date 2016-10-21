@@ -8,5 +8,10 @@
 		{
 			return board[position.R, position.C];
 		}
+
+		public void Set(Position position, bool cross)
+		{
+			board[position.R, position.C] = cross;
+		}
 	}
 }

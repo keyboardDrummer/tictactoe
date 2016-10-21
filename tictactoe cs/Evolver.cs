@@ -19,8 +19,11 @@ namespace tictactoe_cs
 		{
 			var statistics = new Statistics(0,0,0);
 			var winner = FindWinner(true);
-			statistics.WithWinner(winner == null ? (bool?)null : winner == _first);
-			yield return statistics;
+			while (true)
+			{
+				statistics = statistics.WithWinner(winner == null ? (bool?)null : winner == _first);
+				yield return statistics;
+			}
 		}
 
 		public IAI FindWinner(bool firstBegins)
@@ -34,7 +37,8 @@ namespace tictactoe_cs
 			while (board.CanPlay())
 			{
 				var playerBoard = boardPerPlayer[currentPlayer];
-				currentPlayer.Step(playerBoard);
+				var choice = currentPlayer.Step(playerBoard);
+				board.Set(choice, playerBoard == board);
 				var winState = playerBoard.HasWon();
 				if (winState != null)
 				{
