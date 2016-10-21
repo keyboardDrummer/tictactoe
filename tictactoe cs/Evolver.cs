@@ -6,22 +6,23 @@ namespace tictactoe_cs
 {
 	class Evolver
 	{
-		readonly IAI _first;
-		readonly IAI _second;
-
 		public Evolver(IAI first, IAI second)
 		{
-			_first = first;
-			_second = second;
+			First = first;
+			Second = second;
 		}
+
+		public IAI First { get; }
+
+		public IAI Second { get; }
 
 		public IEnumerable<Statistics> PlayGames()
 		{
 			var statistics = new Statistics(0,0,0);
-			var winner = FindWinner(true);
 			while (true)
 			{
-				statistics = statistics.WithWinner(winner == null ? (bool?)null : winner == _first);
+				var winner = FindWinner(true);
+				statistics = statistics.WithWinner(winner == null ? (bool?)null : winner == First);
 				yield return statistics;
 			}
 		}
@@ -29,8 +30,8 @@ namespace tictactoe_cs
 		public IAI FindWinner(bool firstBegins)
 		{
 			var board = new Board();
-			Func<IAI, IAI> getNext = player => player == _first ? _second : _first;
-			var currentPlayer = firstBegins ? _first : _second;
+			Func<IAI, IAI> getNext = player => player == First ? Second : First;
+			var currentPlayer = firstBegins ? First : Second;
 			var boardPerPlayer = new Dictionary<IAI, IBoard> {
 				{ currentPlayer, board},
 				{ getNext(currentPlayer), new FlippedBoard(board)}};

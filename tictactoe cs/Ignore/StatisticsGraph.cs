@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace tictactoe_cs.Ignore
@@ -15,31 +12,49 @@ namespace tictactoe_cs.Ignore
 		public StatisticsGraph()
 		{
 			InitializeComponent();
-			foreach(var result in _evolver.PlayGames().Take(_gamesToPlay))
+			var first = new RandomIai();
+			var evolver = new Evolver(first, new RandomIai());
+
+			foreach (var result in evolver.PlayGames().Take(GamesToPlay))
 			{
 				_statistics.Add(result);
 			}
-			Console.Write("jo");
+			WindowState = FormWindowState.Maximized;
 		}
 
-		readonly Evolver _evolver = new Evolver(new RandomIai(), new RandomIai());
 		readonly IList<Statistics> _statistics = new List<Statistics>();
-		int _gamesToPlay = 100;
+		const int GamesToPlay = 1000;
+		const int MaxY = 1000;
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
+			var graphics = e.Graphics;
+			graphics.SmoothingMode = SmoothingMode.AntiAlias;
+			var margin = 10f;
+			graphics.TranslateTransform(margin, margin);
+			graphics.ScaleTransform((ClientSize.Width - 2 * margin) / GamesToPlay, (ClientSize.Height - 2 * margin) / MaxY);
+			DrawOnTransformedGraphics(graphics);
+			base.OnPaint(e);
+		}
+
+		void DrawOnTransformedGraphics(Graphics graphics)
+		{
 			int x = 0;
 			int y = 0;
-			e.Graphics.ScaleTransform((this.Width * 0.8f) / (float)_gamesToPlay, (this.Height * 0.8f) / (float)_gamesToPlay);
 			foreach (var statistic in _statistics)
 			{
-				var newY = (int)(statistic.FirstWinPercentage * _gamesToPlay);
+				var newY = (int) (statistic.FirstWinPercentage * MaxY);
 				var newX = x + 1;
-				e.Graphics.DrawLine(new Pen(Brushes.Black), new Point(x, _gamesToPlay - y), new Point(newX, _gamesToPlay - newY));
+				graphics.DrawLine(new Pen(Brushes.Black), new Point(x, MaxY - y), new Point(newX, MaxY - newY));
 				y = newY;
 				x = newX;
 			}
-			base.OnPaint(e);
+		}
+
+		protected override void OnResize(EventArgs e)
+		{
+			Invalidate();
+			base.OnResize(e);
 		}
 	}
 }

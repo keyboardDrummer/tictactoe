@@ -26,7 +26,7 @@ namespace tictactoe_cs
 		private void button2_Click(object sender, EventArgs e)
 		{
 			var window = new StatisticsGraph();
-			window.Show(this);
+			window.Show();
 		}
 	}
 }
