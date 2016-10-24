@@ -12,8 +12,7 @@ namespace tictactoe_cs
 		private double _learningRate = 1.0;
 		private double _discountFactor = 0.0;
 
-		private Dictionary<string, Dictionary<int, double>> StateActionRewards { get; } =
-			new Dictionary<string, Dictionary<int, double>>();
+		private Dictionary<string, Dictionary<int, double>> StateActionRewards { get; set; }
 
 		public QLearningAI()
 		{
@@ -23,8 +22,7 @@ namespace tictactoe_cs
 		private void InitializeRewards()
 		{
 			var states = new[] {" ", "0", "1"}.ToList();
-			// ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-			states.SelectMany(c1 =>
+			StateActionRewards = states.SelectMany(c1 =>
 				states.SelectMany(c2 =>
 					states.SelectMany(c3 =>
 						states.SelectMany(c4 =>
@@ -40,20 +38,20 @@ namespace tictactoe_cs
 													{
 														actions.Add(action, _initialReward);
 													}
-													StateActionRewards.Add(state, actions);
-													return state;
+													//StateActionRewards.Add(state, actions);
+													return new[] {new KeyValuePair<string, Dictionary<int, double>>(state, actions)};
 												}
-											)))))))));
+											))))))))).ToDictionary(kv => kv.Key, kv => kv.Value);
 		}
 
 		public Position Step(IBoard board)
 		{
 			string state = ToState(board);
 			int action = ChooseAction(state);
-			double maxRewardNextStep = DetermineMaxRewardNextStep(state, action);
+			//double maxRewardNextStep = DetermineMaxRewardNextStep(state, action);
 			// Update rewardThisAction with reward when winning.
-			double rewardThisAction = _initialReward;
-			UpdateReward(state, action, rewardThisAction, maxRewardNextStep);
+			//double rewardThisAction = _initialReward;
+			//UpdateReward(state, action, rewardThisAction, maxRewardNextStep);
 			return new Position((int) Math.Floor(action/3.0), action%3);
 		}
 
@@ -89,12 +87,12 @@ namespace tictactoe_cs
 			return action;
 		}
 
-		public void Learn(IBoard endGame, bool youWon)
+		public void Learn(IBoard endGame, Position choice, bool youWon)
 		{
-			// I need to know the action that resulted in winning!
 			string state = ToState(endGame);
-			int action = 0; //TODO
-			UpdateReward(state, action, 1.0, 0.0);
+			int action = choice.R*3 + choice.C;
+			string previousState = state.Remove(action, 1).Insert(action, " ");
+			UpdateReward(previousState, action, youWon ? 1.0 : _initialReward, 0.0);
 		}
 
 		string ToState(IBoard board)

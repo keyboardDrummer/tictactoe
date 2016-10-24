@@ -18,7 +18,7 @@ namespace tictactoe_cs
 			return emptyCells[chosenCell];
 		}
 
-		public void Learn(IBoard endGame, bool youWon)
+		public void Learn(IBoard endGame, Position choice, bool youWon)
 		{
 		}
 	}

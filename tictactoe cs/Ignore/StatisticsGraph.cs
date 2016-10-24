@@ -12,7 +12,7 @@ namespace tictactoe_cs.Ignore
 		public StatisticsGraph()
 		{
 			InitializeComponent();
-			var first = new RandomIai();
+			var first = new QLearningAI();
 			var evolver = new Evolver(first, new RandomIai());
 
 			foreach (var result in evolver.PlayGames().Take(GamesToPlay))
@@ -32,7 +32,7 @@ namespace tictactoe_cs.Ignore
 			graphics.SmoothingMode = SmoothingMode.AntiAlias;
 			var margin = 10f;
 			graphics.TranslateTransform(margin, margin);
-			graphics.ScaleTransform((ClientSize.Width - 2 * margin) / GamesToPlay, (ClientSize.Height - 2 * margin) / MaxY);
+			graphics.ScaleTransform((ClientSize.Width - 2*margin)/GamesToPlay, (ClientSize.Height - 2*margin)/MaxY);
 			DrawOnTransformedGraphics(graphics);
 			base.OnPaint(e);
 		}
@@ -43,7 +43,7 @@ namespace tictactoe_cs.Ignore
 			int y = 0;
 			foreach (var statistic in _statistics)
 			{
-				var newY = (int) (statistic.FirstWinPercentage * MaxY);
+				var newY = (int) (statistic.FirstWinPercentage*MaxY);
 				var newX = x + 1;
 				graphics.DrawLine(new Pen(Brushes.Black), new Point(x, MaxY - y), new Point(newX, MaxY - newY));
 				y = newY;
