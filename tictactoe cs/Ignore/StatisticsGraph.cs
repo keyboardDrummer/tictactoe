@@ -39,6 +39,7 @@ namespace tictactoe_cs.Ignore
 
 		void DrawOnTransformedGraphics(Graphics graphics)
 		{
+			graphics.DrawLine(new Pen(Brushes.Red), new Point(0, MaxY / 2), new Point(GamesToPlay, MaxY / 2));
 			int x = 0;
 			int y = 0;
 			graphics.DrawLine(new Pen(Brushes.Gray), new Point(0, 0), new Point(GamesToPlay, 0));
@@ -50,14 +51,23 @@ namespace tictactoe_cs.Ignore
 				graphics.DrawLine(new Pen(Brushes.LightGray), new Point(0, MaxY/10*interval),
 					new Point(GamesToPlay, MaxY/10*interval));
 			}
+			int y2 = 0;
 			foreach (var statistic in _statistics)
 			{
-				var newY = (int) (statistic.FirstWinPercentage*MaxY);
 				var newX = x + 1;
-				graphics.DrawLine(new Pen(Brushes.Black), new Point(x, MaxY - y), new Point(newX, MaxY - newY));
-				y = newY;
+				var first = statistic.FirstWinPercentage;
+				y = DrawLinePart(graphics, first, x, y, newX, Brushes.Black);
+				y2 = DrawLinePart(graphics, statistic.FirstWinOrTiePercentage, x, y2, newX, Brushes.Blue);
 				x = newX;
 			}
+		}
+
+		static int DrawLinePart(Graphics graphics, double first, int x, int y, int newX, Brush black)
+		{
+			var newY = (int) (first*MaxY);
+			graphics.DrawLine(new Pen(black), new Point(x, MaxY - y), new Point(newX, MaxY - newY));
+			y = newY;
+			return y;
 		}
 
 		protected override void OnResize(EventArgs e)

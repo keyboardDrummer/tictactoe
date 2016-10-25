@@ -25,5 +25,6 @@
 		}
 
 		public double FirstWinPercentage => (double) FirstWins/GamesPlayed;
+		public double FirstWinOrTiePercentage => (double)(GamesPlayed - SecondWins) / GamesPlayed;
 	}
 }
