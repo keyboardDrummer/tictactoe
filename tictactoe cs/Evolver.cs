@@ -16,11 +16,11 @@ namespace tictactoe_cs
 
 		public IEnumerable<Statistics> PlayGames()
 		{
-			var statistics = new Statistics(0,0,0);
+			var statistics = new Statistics(0, 0, 0);
 			while (true)
 			{
 				var winner = FindWinner(true);
-				statistics = statistics.WithWinner(winner == null ? (bool?)null : winner == First);
+				statistics = statistics.WithWinner(winner == null ? (bool?) null : winner == First);
 				yield return statistics;
 			}
 		}
@@ -29,9 +29,11 @@ namespace tictactoe_cs
 		{
 			var board = new Board();
 			var currentPlayer = firstBegins ? First : Second;
-			var boardPerPlayer = new Dictionary<IAI, IBoard> {
-				{ currentPlayer, board },
-				{ GetNextPlayer(currentPlayer), new FlippedBoard(board)}};
+			var boardPerPlayer = new Dictionary<IAI, IBoard>
+			{
+				{currentPlayer, board},
+				{GetNextPlayer(currentPlayer), new FlippedBoard(board)}
+			};
 
 			while (board.CanPlay())
 			{
@@ -42,9 +44,9 @@ namespace tictactoe_cs
 				if (winState != null)
 				{
 					var winner = winState.Value ? currentPlayer : GetNextPlayer(currentPlayer);
-					winner.Learn(boardPerPlayer[winner], true);
+					winner.Learn(boardPerPlayer[winner], choice, true);
 					var loser = GetNextPlayer(winner);
-					loser.Learn(boardPerPlayer[loser], false);
+					loser.Learn(boardPerPlayer[loser], choice, false);
 					return winner;
 				}
 				currentPlayer = GetNextPlayer(currentPlayer);
