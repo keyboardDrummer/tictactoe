@@ -8,9 +8,9 @@ namespace tictactoe_cs
 	class QLearningAI : IAI
 	{
 		Random random = new Random((int) DateTime.Now.Ticks);
-		private double _initialReward = 0.1;
+		private double _initialReward = 0.001;
 		private double _learningRate = 1.0;
-		private double _discountFactor = 0.0;
+		private double _discountFactor = 0.5;
 
 		private Dictionary<string, Dictionary<int, double>> StateActionRewards { get; set; }
 
@@ -38,7 +38,6 @@ namespace tictactoe_cs
 													{
 														actions.Add(action, _initialReward);
 													}
-													//StateActionRewards.Add(state, actions);
 													return new[] {new KeyValuePair<string, Dictionary<int, double>>(state, actions)};
 												}
 											))))))))).ToDictionary(kv => kv.Key, kv => kv.Value);
@@ -48,10 +47,6 @@ namespace tictactoe_cs
 		{
 			string state = ToState(board);
 			int action = ChooseAction(state);
-			//double maxRewardNextStep = DetermineMaxRewardNextStep(state, action);
-			// Update rewardThisAction with reward when winning.
-			//double rewardThisAction = _initialReward;
-			//UpdateReward(state, action, rewardThisAction, maxRewardNextStep);
 			return new Position((int) Math.Floor(action/3.0), action%3);
 		}
 
@@ -61,12 +56,6 @@ namespace tictactoe_cs
 			StateActionRewards[state][action] = currentReward +
 			                                    _learningRate*
 			                                    (reward + _discountFactor*maxRewardNextStep - currentReward);
-		}
-
-		// This is a more advanced parameter. Currently it is available, just not yet implemented.
-		private double DetermineMaxRewardNextStep(string state, int action)
-		{
-			return 0.0;
 		}
 
 		private int ChooseAction(string state)
@@ -92,7 +81,8 @@ namespace tictactoe_cs
 			string state = ToState(endGame);
 			int action = choice.R*3 + choice.C;
 			string previousState = state.Remove(action, 1).Insert(action, " ");
-			UpdateReward(previousState, action, youWon ? 1.0 : _initialReward, 0.0);
+			double maxRewardNextStep = youWon ? 1.0 : StateActionRewards[state].Values.Max(v => v);
+			UpdateReward(previousState, action, youWon ? 1.0 : _initialReward, maxRewardNextStep);
 		}
 
 		string ToState(IBoard board)
