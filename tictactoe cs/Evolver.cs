@@ -40,14 +40,19 @@ namespace tictactoe_cs
 				var playerBoard = boardPerPlayer[currentPlayer];
 				var choice = currentPlayer.Step(playerBoard);
 				board.Set(choice, playerBoard == board);
+
 				var winState = playerBoard.HasWon();
 				if (winState != null)
 				{
 					var winner = winState.Value ? currentPlayer : GetNextPlayer(currentPlayer);
 					winner.Learn(boardPerPlayer[winner], choice, true);
 					var loser = GetNextPlayer(winner);
-					loser.Learn(boardPerPlayer[loser], choice, false);
+					//loser.Learn(boardPerPlayer[loser], choice, false);
 					return winner;
+				}
+				else
+				{
+					currentPlayer.Learn(board, choice, false);
 				}
 				currentPlayer = GetNextPlayer(currentPlayer);
 			}
