@@ -25,7 +25,7 @@ namespace tictactoe_cs
 		{
 			for (int counter = 0; counter < count; counter++)
 			{
-				FindWinner(true);
+				PlayGame(true);
 			}
 		}
 
@@ -34,13 +34,13 @@ namespace tictactoe_cs
 			var statistics = new Statistics(0, 0, 0);
 			while (true)
 			{
-				var winner = FindWinner(true);
+				var winner = PlayGame(true);
 				statistics = statistics.WithWinner(winner);
 				yield return statistics;
 			}
 		}
 
-		public Player? FindWinner(bool crossBegins)
+		public Player? PlayGame(bool crossBegins)
 		{
 			var board = new Board();
 			var currentPlayer = crossBegins ? Player.Cross : Player.Ring;
