@@ -25,23 +25,6 @@ namespace tictactoe_cs
 			GetActionRewards(previousState)[action] = currentReward + _learningRate * (learnedValue - currentReward);
 		}
 
-		Dictionary<TAction, double> GetActionRewards(TState state)
-		{
-			Dictionary<TAction, double> result;
-			if (StateActionRewards.TryGetValue(state, out result))
-			{
-				return result;
-			}
-
-			result = new Dictionary<TAction, double>();
-			foreach (var action in GetActionsValidForState(state))
-			{
-				result[action] = 0;
-			}
-			StateActionRewards[state] = result;
-			return result;
-		}
-
 		protected abstract IEnumerable<TAction> GetActionsValidForState(TState state);
 
 		public TAction Step(TState board)
@@ -62,7 +45,24 @@ namespace tictactoe_cs
 				}
 				randomAction -= value;
 			}
-			throw new NotImplementedException();
+			throw new InvalidOperationException();
+		}
+
+		Dictionary<TAction, double> GetActionRewards(TState state)
+		{
+			Dictionary<TAction, double> result;
+			if (StateActionRewards.TryGetValue(state, out result))
+			{
+				return result;
+			}
+
+			result = new Dictionary<TAction, double>();
+			foreach (var action in GetActionsValidForState(state))
+			{
+				result[action] = 0;
+			}
+			StateActionRewards[state] = result;
+			return result;
 		}
 	}
 }
