@@ -15,10 +15,6 @@ namespace tictactoe_cs
 
 		protected void Learn(TAction action, TState state, TState previousState, double reward)
 		{
-			if (GetActionRewards(state).Values.Any(v => v > 0.0))
-			{
-				Console.Write(" jo");
-			}
 			double maxRewardNextStep = GetActionRewards(state).Values.Concat(new List<double> { 0.0 }).Max(v => v);
 			double currentReward = StateActionRewards[previousState][action];
 			var learnedValue = reward + _discountFactor * maxRewardNextStep;
