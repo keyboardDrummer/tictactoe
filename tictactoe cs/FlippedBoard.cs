@@ -1,18 +1,30 @@
-﻿namespace tictactoe_cs
+﻿using System;
+
+namespace tictactoe_cs
 {
 	class FlippedBoard : IBoard
 	{
-		readonly IBoard original;
+		readonly IBoard _original;
 
 		public FlippedBoard(IBoard original)
 		{
-			this.original = original;
+			_original = original;
 		}
 
-		public bool? GetPosition(Position position)
+		public CellValue GetPosition(Position position)
 		{
-			var originalResult = original.GetPosition(position);
-			return !originalResult;
+			var originalResult = _original.GetPosition(position);
+			switch (originalResult)
+			{
+				case CellValue.Empty:
+					return CellValue.Empty;
+				case CellValue.Cross:
+					return CellValue.Ring;
+				case CellValue.Ring:
+					return CellValue.Cross;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 	}
 }

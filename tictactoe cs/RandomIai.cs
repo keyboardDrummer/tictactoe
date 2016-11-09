@@ -12,7 +12,7 @@ namespace tictactoe_cs
 			var emptyCells =
 				Enumerable.Range(0, 9)
 					.Select(index => new Position (index%3, index/3))
-					.Where(b => board.GetPosition(b) == null)
+					.Where(b => board.GetPosition(b) == CellValue.Empty)
 					.ToList();
 			var chosenCell = Random.Next(emptyCells.Count);
 			return emptyCells[chosenCell];

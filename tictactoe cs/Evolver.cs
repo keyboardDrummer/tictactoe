@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace tictactoe_cs
 {
@@ -14,15 +15,17 @@ namespace tictactoe_cs
 
 		public IAI Second { get; }
 
-		public IEnumerable<Statistics> PlayGames()
+		public IList<Statistics> PlayGames(int games)
 		{
+			var result = new List<Statistics>();
 			var statistics = new Statistics(0, 0, 0);
-			while (true)
+			for (var counter = 0; counter < games; counter++)
 			{
 				var winner = FindWinner(true);
-				statistics = statistics.WithWinner(winner == null ? (bool?) null : winner == First);
-				yield return statistics;
+				statistics = statistics.WithWinner(winner == null ? (bool?)null : winner == First);
+				result.Add(statistics);
 			}
+			return result;
 		}
 
 		public IAI FindWinner(bool firstBegins)
@@ -39,21 +42,23 @@ namespace tictactoe_cs
 			{
 				var playerBoard = boardPerPlayer[currentPlayer];
 				var choice = currentPlayer.Step(playerBoard);
-				board.Set(choice, playerBoard == board);
-
-				var winState = playerBoard.HasWon();
-				if (winState != null)
+				if (board.GetPosition(choice) == CellValue.Empty)
 				{
-					var winner = winState.Value ? currentPlayer : GetNextPlayer(currentPlayer);
-					winner.Learn(boardPerPlayer[winner], choice, true);
-					var loser = GetNextPlayer(winner);
-					//loser.Learn(boardPerPlayer[loser], choice, false);
-					return winner;
+					var crossIsPlaying = playerBoard == board;
+					board.Set(choice, crossIsPlaying ? CellValue.Cross : CellValue.Ring);
 				}
 				else
 				{
-					currentPlayer.Learn(board, choice, false);
+					return GetNextPlayer(currentPlayer);
 				}
+
+				var winState = playerBoard.HasWon();
+				if (winState != CellValue.Empty)
+				{
+					currentPlayer.Learn(board, choice, true);
+					return currentPlayer;
+				}
+				currentPlayer.Learn(board, choice, false);
 				currentPlayer = GetNextPlayer(currentPlayer);
 			}
 			return null;

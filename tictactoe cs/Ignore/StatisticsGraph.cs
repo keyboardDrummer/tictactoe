@@ -15,7 +15,7 @@ namespace tictactoe_cs.Ignore
 			var first = new QLearningAI();
 			var evolver = new Evolver(first, new RandomIai());
 
-			foreach (var result in evolver.PlayGames().Take(GamesToPlay))
+			foreach (var result in evolver.PlayGames(GamesToPlay))
 			{
 				_statistics.Add(result);
 			}
@@ -23,7 +23,7 @@ namespace tictactoe_cs.Ignore
 		}
 
 		readonly IList<Statistics> _statistics = new List<Statistics>();
-		const int GamesToPlay = 10000;
+		public const int GamesToPlay = 100000;
 		const int MaxY = 1000;
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -39,9 +39,22 @@ namespace tictactoe_cs.Ignore
 
 		void DrawOnTransformedGraphics(Graphics graphics)
 		{
-			graphics.DrawLine(new Pen(Brushes.Red), new Point(0, MaxY / 2), new Point(GamesToPlay, MaxY / 2));
+			DrawGrid(graphics);
 			int x = 0;
-			int y = 0;
+			int winY = 0;
+			int winOrTieY = 0;
+			foreach (var statistic in _statistics)
+			{
+				var newX = x + 1;
+				winY = DrawLinePart(graphics, statistic.FirstWinPercentage, x, winY, newX, Brushes.Black);
+				winOrTieY = DrawLinePart(graphics, statistic.FirstWinOrTiePercentage, x, winOrTieY, newX, Brushes.Blue);
+				x = newX;
+			}
+		}
+
+		static void DrawGrid(Graphics graphics)
+		{
+			graphics.DrawLine(new Pen(Brushes.Red), new Point(0, MaxY/2), new Point(GamesToPlay, MaxY/2));
 			graphics.DrawLine(new Pen(Brushes.Gray), new Point(0, 0), new Point(GamesToPlay, 0));
 			graphics.DrawLine(new Pen(Brushes.Gray), new Point(0, MaxY/2), new Point(GamesToPlay, MaxY/2));
 			graphics.DrawLine(new Pen(Brushes.Gray), new Point(0, MaxY), new Point(GamesToPlay, MaxY));
@@ -51,23 +64,13 @@ namespace tictactoe_cs.Ignore
 				graphics.DrawLine(new Pen(Brushes.LightGray), new Point(0, MaxY/10*interval),
 					new Point(GamesToPlay, MaxY/10*interval));
 			}
-			int y2 = 0;
-			foreach (var statistic in _statistics)
-			{
-				var newX = x + 1;
-				var first = statistic.FirstWinPercentage;
-				y = DrawLinePart(graphics, first, x, y, newX, Brushes.Black);
-				y2 = DrawLinePart(graphics, statistic.FirstWinOrTiePercentage, x, y2, newX, Brushes.Blue);
-				x = newX;
-			}
 		}
 
-		static int DrawLinePart(Graphics graphics, double first, int x, int y, int newX, Brush black)
+		static int DrawLinePart(Graphics graphics, double relativeNewY, int x, int y, int newX, Brush black)
 		{
-			var newY = (int) (first*MaxY);
+			var newY = (int) (relativeNewY*MaxY);
 			graphics.DrawLine(new Pen(black), new Point(x, MaxY - y), new Point(newX, MaxY - newY));
-			y = newY;
-			return y;
+			return newY;
 		}
 
 		protected override void OnResize(EventArgs e)

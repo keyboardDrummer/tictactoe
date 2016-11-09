@@ -1,106 +1,109 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace tictactoe_cs
 {
 	class QLearningAI : IAI
 	{
-		Random random = new Random((int) DateTime.Now.Ticks);
-		private double _initialReward = 0.001;
-		private double _learningRate = 1.0;
-		private double _discountFactor = 0.5;
+		readonly Random _random = new Random();
+		double _learningRate = 1.0;
+		double _discountFactor = 1.0;
 
-		private Dictionary<string, Dictionary<int, double>> StateActionRewards { get; set; }
+		Dictionary<Board, Dictionary<Position, double>> StateActionRewards { get; } 
+			= new Dictionary<Board, Dictionary<Position, double>>();
 
 		public QLearningAI()
 		{
 			InitializeRewards();
 		}
 
-		private void InitializeRewards()
+		IEnumerable<Board> GetAllBoards()
 		{
-			var states = new[] {" ", "0", "1"}.ToList();
-			StateActionRewards = states.SelectMany(c1 =>
-				states.SelectMany(c2 =>
-					states.SelectMany(c3 =>
-						states.SelectMany(c4 =>
-							states.SelectMany(c5 =>
-								states.SelectMany(c6 =>
-									states.SelectMany(c7 =>
-										states.SelectMany(c8 =>
-											states.SelectMany(c9 =>
-												{
-													string state = c1 + c2 + c3 + c4 + c5 + c6 + c7 + c8 + c9;
-													var actions = new Dictionary<int, double>();
-													for (int action = 0; action < 9; action++)
-													{
-														actions.Add(action, _initialReward);
-													}
-													return new[] {new KeyValuePair<string, Dictionary<int, double>>(state, actions)};
-												}
-											))))))))).ToDictionary(kv => kv.Key, kv => kv.Value);
+			return GetAllBoards(0);
 		}
 
-		public Position Step(IBoard board)
+		IEnumerable<Board> GetAllBoards(int fromCell)
 		{
-			string state = ToState(board);
-			int action = ChooseAction(state);
-			return new Position((int) Math.Floor(action/3.0), action%3);
+			if (fromCell == 9)
+			{
+				yield return new Board();
+			}
+			else
+			{
+				var position = new Position(fromCell / 3, fromCell % 3);
+				var recursive = GetAllBoards(fromCell + 1);
+				foreach (var recursiveResult in recursive)
+				{
+					foreach (var cellState in Enum.GetValues(typeof(CellValue)).Cast<CellValue>())
+					{
+						var result = new Board(recursiveResult);
+						result.Set(position, cellState);
+						yield return result;
+					}
+				}
+			}
 		}
 
-		private void UpdateReward(string state, int action, double reward, double maxRewardNextStep)
+		void InitializeRewards()
 		{
-			double currentReward = StateActionRewards[state][action];
-			StateActionRewards[state][action] = currentReward +
-			                                    _learningRate*
-			                                    (reward + _discountFactor*maxRewardNextStep - currentReward);
+			var boards = GetAllBoards();
+			foreach (var board in boards)
+			{
+				var stateActionValues = new Dictionary<Position, double>();
+				StateActionRewards.Add(board, stateActionValues);
+				var unusedPositions = BoardExtensions.GetPositions().Where(position => board.GetPosition(position) == CellValue.Empty);
+				foreach (var unusedPosition in unusedPositions)
+				{
+					stateActionValues[unusedPosition] = 0;
+				}
+			}
 		}
 
-		private int ChooseAction(string state)
+		public Position Step(IBoard iBoard)
 		{
-			var actions = StateActionRewards[state];
+			var board = new Board(iBoard);
+			return ChooseAction(board);
+		}
+
+		Position ChooseAction(Board board)
+		{
+			var actions = StateActionRewards[board];
 			double total = actions.Values.Sum();
-			var normalizedRewards = actions.Select(kv => new {kv.Key, Value = kv.Value/total})
+			if (total < 1e-5)
+			{
+				return actions.Keys.ElementAt(_random.Next(actions.Keys.Count - 1));
+			}
+			var normalizedRewards = actions.Select(kv => new {kv.Key, Value = kv.Value / total})
 				.ToDictionary(kv => kv.Key, kv => kv.Value);
-			for (int i = 1; i < 9; i++)
+			var previousPosition = normalizedRewards.Keys.First();
+			foreach (var position in normalizedRewards.Keys.Skip(1).ToList())
 			{
-				normalizedRewards[i] += normalizedRewards[i - 1];
+				normalizedRewards[position] += normalizedRewards[previousPosition];
+				previousPosition = position;
 			}
-			double randomAction = random.NextDouble();
-			int action =
-				normalizedRewards.Select((kv, i) => new {KeyValue = kv, Action = i})
-					.First(kva => kva.KeyValue.Value > randomAction)
-					.Action;
-			return action;
+			double randomAction = _random.NextDouble();
+			return normalizedRewards.First(kva => kva.Value > randomAction).Key;
 		}
 
-		public void Learn(IBoard endGame, Position choice, bool youWon)
+		public void Learn(IBoard iState, Position action, bool youWin)
 		{
-			string state = ToState(endGame);
-			int action = choice.R*3 + choice.C;
-			string previousState = state.Remove(action, 1).Insert(action, " ");
-			double maxRewardNextStep = youWon ? 1.0 : StateActionRewards[state].Values.Max(v => v);
-			UpdateReward(previousState, action, youWon ? 1.0 : _initialReward, maxRewardNextStep);
+			var state = new Board(iState);
+			var previousState = new Board(state);
+			previousState.Set(action, CellValue.Empty);
+			Learn(action, state, previousState, youWin ? 1.0 : 0);
 		}
 
-		string ToState(IBoard board)
+		void Learn(Position action, Board state, Board previousState, double reward)
 		{
-			var sb = new StringBuilder();
-			for (int r = 0; r < 3; r++)
-				for (int c = 0; c < 3; c++)
-					sb.Append(AsChar(board.GetPosition(r, c)));
-			return sb.ToString();
-		}
-
-		char AsChar(bool? cellState)
-		{
-			if (!cellState.HasValue)
+			if (StateActionRewards[state].Values.Any(v => v > 0.0))
 			{
-				return ' ';
+				Console.Write(" jo");
 			}
-			return cellState.Value ? '1' : '0';
+			double maxRewardNextStep = StateActionRewards[state].Values.Concat(new List<double> {0.0}).Max(v => v);
+			double currentReward = StateActionRewards[previousState][action];
+			var learnedValue = reward + _discountFactor * maxRewardNextStep;
+			StateActionRewards[previousState][action] = currentReward + _learningRate * (learnedValue - currentReward);
 		}
 	}
 }

@@ -5,16 +5,16 @@ namespace tictactoe_cs
 {
 	public static class BoardExtensions
 	{
-		public static bool? GetPosition(this IBoard board, int row, int column)
+		public static CellValue GetPosition(this IBoard board, int row, int column)
 		{
 			return board.GetPosition(new Position(row, column));
 		}
 
-		public static bool? HasWon(this IBoard board)
+		public static CellValue HasWon(this IBoard board)
 		{
 			for (int r = 0; r < 3; r++)
 			{
-				if (board.GetPosition(r, 0) != null && board.GetPosition(r, 0) == board.GetPosition(r, 1) &&
+				if (board.GetPosition(r, 0) != CellValue.Empty && board.GetPosition(r, 0) == board.GetPosition(r, 1) &&
 				    board.GetPosition(r, 0) == board.GetPosition(r, 2))
 				{
 					return board.GetPosition(r, 0);
@@ -22,31 +22,31 @@ namespace tictactoe_cs
 			}
 			for (int c = 0; c < 3; c++)
 			{
-				if (board.GetPosition(0, c) != null && board.GetPosition(0, c) == board.GetPosition(1, c) &&
+				if (board.GetPosition(0, c) != CellValue.Empty && board.GetPosition(0, c) == board.GetPosition(1, c) &&
 				    board.GetPosition(0, c) == board.GetPosition(2, c))
 				{
 					return board.GetPosition(0, c);
 				}
 			}
-			if (board.GetPosition(0, 0) != null && board.GetPosition(0, 0) == board.GetPosition(1, 1) &&
+			if (board.GetPosition(0, 0) != CellValue.Empty && board.GetPosition(0, 0) == board.GetPosition(1, 1) &&
 			    board.GetPosition(0, 0) == board.GetPosition(2, 2))
 			{
 				return board.GetPosition(0, 0);
 			}
-			if (board.GetPosition(0, 2) != null && board.GetPosition(0, 2) == board.GetPosition(1, 1) &&
+			if (board.GetPosition(0, 2) != CellValue.Empty && board.GetPosition(0, 2) == board.GetPosition(1, 1) &&
 			    board.GetPosition(0, 2) == board.GetPosition(2, 0))
 			{
 				return board.GetPosition(0, 2);
 			}
-			return null;
+			return CellValue.Empty;
 		}
 
 		public static bool CanPlay(this IBoard board)
 		{
-			return board.GetStates().Any(p => p == null);
+			return board.GetStates().Any(p => p == CellValue.Empty);
 		}
 
-		public static IEnumerable<bool?> GetStates(this IBoard me)
+		public static IEnumerable<CellValue> GetStates(this IBoard me)
 		{
 			return GetPositions().Select(me.GetPosition);
 		}

@@ -2,6 +2,6 @@
 {
 	public interface IBoard
 	{
-		bool? GetPosition(Position position);
+		CellValue GetPosition(Position position);
 	}
 }
