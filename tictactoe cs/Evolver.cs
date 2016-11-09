@@ -1,72 +1,88 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace tictactoe_cs
 {
 	class Evolver
 	{
-		public Evolver(IAI first, IAI second)
+		public Evolver(IAI cross, IAI ring)
 		{
-			First = first;
-			Second = second;
+			Cross = cross;
+			Ring = new AIPlayingAsRing(ring);
 		}
 
-		public IAI First { get; }
+		public IAI Cross { get; }
 
-		public IAI Second { get; }
+		public IAI Ring { get; }
 
-		public IList<Statistics> PlayGames(int games)
+		public IAI GetAI(Player cross)
 		{
-			var result = new List<Statistics>();
+			return cross == Player.Cross ? Cross : Ring;
+		}
+
+		public void PlayGames(int count)
+		{
+			for (int counter = 0; counter < count; counter++)
+			{
+				FindWinner(true);
+			}
+		}
+
+		public IEnumerable<Statistics> PlayGames()
+		{
 			var statistics = new Statistics(0, 0, 0);
-			for (var counter = 0; counter < games; counter++)
+			while (true)
 			{
 				var winner = FindWinner(true);
-				statistics = statistics.WithWinner(winner == null ? (bool?)null : winner == First);
-				result.Add(statistics);
+				statistics = statistics.WithWinner(winner);
+				yield return statistics;
 			}
-			return result;
 		}
 
-		public IAI FindWinner(bool firstBegins)
+		public Player? FindWinner(bool crossBegins)
 		{
 			var board = new Board();
-			var currentPlayer = firstBegins ? First : Second;
-			var boardPerPlayer = new Dictionary<IAI, IBoard>
-			{
-				{currentPlayer, board},
-				{GetNextPlayer(currentPlayer), new FlippedBoard(board)}
-			};
+			var currentPlayer = crossBegins ? Player.Cross : Player.Ring;
 
+			Action<IBoard, bool?> learn = null;
 			while (board.CanPlay())
 			{
-				var playerBoard = boardPerPlayer[currentPlayer];
-				var choice = currentPlayer.Step(playerBoard);
+				var boardBeforePlay = board;
+				var currentAI = GetAI(currentPlayer);
+				var choice = currentAI.Step(boardBeforePlay);
+				var boardAfterPlay = new Board(board);
 				if (board.GetPosition(choice) == CellValue.Empty)
 				{
-					var crossIsPlaying = playerBoard == board;
-					board.Set(choice, crossIsPlaying ? CellValue.Cross : CellValue.Ring);
+					var crossIsPlaying = currentPlayer == Player.Cross;
+					boardAfterPlay.Set(choice, crossIsPlaying ? CellValue.Cross : CellValue.Ring);
 				}
 				else
 				{
+					MessageBox.Show("Your AI made an invalid move");
 					return GetNextPlayer(currentPlayer);
 				}
 
-				var winState = playerBoard.HasWon();
+				var winState = boardAfterPlay.HasWon();
 				if (winState != CellValue.Empty)
 				{
-					currentPlayer.Learn(board, choice, true);
+					currentAI.Learn(board, boardAfterPlay, choice, true);
+					learn?.Invoke(boardAfterPlay, false);
 					return currentPlayer;
 				}
-				currentPlayer.Learn(board, choice, false);
+				board = boardAfterPlay;
 				currentPlayer = GetNextPlayer(currentPlayer);
+				learn?.Invoke(boardAfterPlay, null);
+
+				var learnBoard = boardBeforePlay;
+				learn = (newState, result) => currentAI.Learn(learnBoard, newState, choice, result);
 			}
 			return null;
 		}
 
-		IAI GetNextPlayer(IAI player)
+		Player GetNextPlayer(Player player)
 		{
-			return player == First ? Second : First;
+			return player == Player.Cross ? Player.Ring : Player.Cross;
 		}
 	}
 }

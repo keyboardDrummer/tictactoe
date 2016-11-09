@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,12 +14,12 @@ namespace tictactoe_cs
 {
     public partial class Game : Form
     {
-	    readonly QLearningAI _ai;
+	    readonly QLearningTicTacToeAI _ai;
 
 	    public Game()
         {
             InitializeComponent();
-			_ai = new QLearningAI();
+			_ai = new QLearningTicTacToeAI();
 			var evolver = new Evolver(_ai, new RandomIai());
 	        evolver.PlayGames(StatisticsGraph.GamesToPlay);
 		}

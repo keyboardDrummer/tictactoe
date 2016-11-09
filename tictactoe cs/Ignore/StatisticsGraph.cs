@@ -12,10 +12,10 @@ namespace tictactoe_cs.Ignore
 		public StatisticsGraph()
 		{
 			InitializeComponent();
-			var first = new QLearningAI();
-			var evolver = new Evolver(first, new RandomIai());
+			var ai = new QLearningTicTacToeAI();
+			var evolver = new Evolver(ai, new RandomIai());
 
-			foreach (var result in evolver.PlayGames(GamesToPlay))
+			foreach (var result in evolver.PlayGames().Take(GamesToPlay))
 			{
 				_statistics.Add(result);
 			}
@@ -23,7 +23,7 @@ namespace tictactoe_cs.Ignore
 		}
 
 		readonly IList<Statistics> _statistics = new List<Statistics>();
-		public const int GamesToPlay = 100000;
+		public const int GamesToPlay = 10000;
 		const int MaxY = 1000;
 
 		protected override void OnPaint(PaintEventArgs e)

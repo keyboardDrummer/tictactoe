@@ -4,27 +4,27 @@
 	{
 		public int GamesPlayed { get; }
 
-		public int FirstWins { get; }
+		public int CrossWins { get; }
 
-		public int SecondWins { get; }
+		public int RingWins { get; }
 
-		public Statistics(int gamesPlayed, int firstWins, int secondWins)
+		public Statistics(int gamesPlayed, int crossWins, int ringWins)
 		{
 			GamesPlayed = gamesPlayed;
-			FirstWins = firstWins;
-			SecondWins = secondWins;
+			CrossWins = crossWins;
+			RingWins = ringWins;
 		}
 
-		public Statistics WithWinner(bool? winner)
+		public Statistics WithWinner(Player? winner)
 		{
 			return winner.HasValue
-				? (winner.Value
-					? new Statistics(GamesPlayed + 1, FirstWins + 1, SecondWins)
-					: new Statistics(GamesPlayed + 1, FirstWins, SecondWins + 1))
-				: new Statistics(GamesPlayed + 1, FirstWins, SecondWins);
+				? (winner.Value == Player.Cross
+					? new Statistics(GamesPlayed + 1, CrossWins + 1, RingWins)
+					: new Statistics(GamesPlayed + 1, CrossWins, RingWins + 1))
+				: new Statistics(GamesPlayed + 1, CrossWins, RingWins);
 		}
 
-		public double FirstWinPercentage => (double) FirstWins/GamesPlayed;
-		public double FirstWinOrTiePercentage => (double)(GamesPlayed - SecondWins) / GamesPlayed;
+		public double FirstWinPercentage => (double) CrossWins / GamesPlayed;
+		public double FirstWinOrTiePercentage => (double) (GamesPlayed - RingWins) / GamesPlayed;
 	}
 }
