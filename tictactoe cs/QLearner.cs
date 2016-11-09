@@ -40,13 +40,12 @@ namespace tictactoe_cs
 				return actions.Keys.ElementAt(_random.Next(actions.Keys.Count - 1));
 			}
 			double randomAction = total * _random.NextDouble();
-			var normalizedRewards = actions.ToList();
-			for (int index = 1; index < normalizedRewards.Count; index++)
+			foreach (var actionReward in actions)
 			{
-				var value = normalizedRewards[index].Value;
-				if (value > randomAction)
+				var value = actionReward.Value;
+				if (value >= randomAction)
 				{
-					return normalizedRewards[index].Key;
+					return actionReward.Key;
 				}
 				randomAction -= value;
 			}
