@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace qlttt
+namespace tictactoe_cs
 {
 	public class TicTacToeGame
 	{

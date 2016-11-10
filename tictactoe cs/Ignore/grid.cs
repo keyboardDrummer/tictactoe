@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using qlttt;
 
 namespace tictactoe_cs
 {
-	public class Grid : System.Windows.Forms.Panel, IBoard
+	public class Grid : System.Windows.Forms.Panel
 	{
 		public readonly cell[][] Matrix = new cell[3][];
 		char first = 'X';
@@ -13,20 +12,6 @@ namespace tictactoe_cs
 		bool gameOver;
 		int moveCounter;
 		IPlayer _iai;
-
-		public CellValue GetPosition(Position position)
-		{
-			switch (Matrix[position.R][position.C].display)
-			{
-				case ' ':
-					return CellValue.Empty;
-				case 'X':
-					return CellValue.Cross;
-				case '0':
-					return CellValue.Ring;
-			}
-			throw new NotSupportedException();
-		}
 
 
 		public Grid()
@@ -151,7 +136,7 @@ namespace tictactoe_cs
 
 		public void PlayMove()
 		{
-			var aiChoice = _iai.Play(new qlttt.Board(this), first == 'X' ? 2 : 1);
+			var aiChoice = _iai.Play(new Board(this), first == 'X' ? 2 : 1);
 			var cell = Matrix[aiChoice/3][aiChoice%3];
 			if (cell.display == ' ')
 			{

@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace qlttt
+namespace tictactoe_cs
 {
-	internal class Program
+	internal class Stats
 	{
-		private static void Mainx(string[] args)
+		public static void Print(IPlayer player)
 		{
-			var qplayer = new QPlayer();
-			qplayer.Learn();
+			var qplayer = player;
 			var rplayer = new THandPlayer(); // new RandomPlayer();
 
 			var game = new TicTacToeGame();
@@ -55,14 +54,14 @@ namespace qlttt
 			Console.WriteLine(" other player wins: " + otherPlayerWins2);
 			Console.WriteLine("             draws: " + draw2);
 			Console.WriteLine("            #games: " + totalgames2);
-			Console.WriteLine("              win%: " + 100.0* qplayerWins2/totalgames2);
+			Console.WriteLine("              win%: " + 100.0*qplayerWins2/totalgames2);
 
 			Console.WriteLine("------overall------------");
-			Console.WriteLine("      qplayer wins: " + (qplayerWins1+qplayerWins2));
+			Console.WriteLine("      qplayer wins: " + (qplayerWins1 + qplayerWins2));
 			Console.WriteLine(" other player wins: " + (otherPlayerWins1 + otherPlayerWins2));
 			Console.WriteLine("             draws: " + (draw1 + draw2));
-			Console.WriteLine("            #games: " + (totalgames1+totalgames2));
-			Console.WriteLine("              win%: " + 100.0 * (qplayerWins1 + qplayerWins2) / (totalgames1+totalgames2));
+			Console.WriteLine("            #games: " + (totalgames1 + totalgames2));
+			Console.WriteLine("              win%: " + 100.0*(qplayerWins1 + qplayerWins2)/(totalgames1 + totalgames2));
 		}
 	}
 }

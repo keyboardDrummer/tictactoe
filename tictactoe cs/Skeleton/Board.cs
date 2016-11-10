@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
-using tictactoe_cs;
 
-namespace qlttt
+namespace tictactoe_cs
 {
 	public class Board : IEquatable<Board>
 	{

@@ -1,4 +1,4 @@
-﻿namespace qlttt
+﻿namespace tictactoe_cs
 {
 	internal class THandPlayer : RandomPlayer
 	{

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace qlttt
+namespace tictactoe_cs
 {
-	internal class QPlayer : IPlayer
+	internal class MyOwnPlayer : IPlayer
 	{
 		public Dictionary<Board, Dictionary<int, double>> Q { get; set; } = new Dictionary<Board, Dictionary<int, double>>();
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace qlttt
+namespace tictactoe_cs
 {
 	internal class RandomPlayer : IPlayer
 	{

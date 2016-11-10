@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Windows.Forms;
-using qlttt;
-using tictactoe_cs.Ignore;
 
 namespace tictactoe_cs
 {
 	public partial class Game : Form
 	{
-		readonly QLearningTicTacToeAI _ai;
-		QPlayer _qPlayer = new QPlayer();
+		MyOwnPlayer _qPlayer = new MyOwnPlayer();
 
 		public Game()
 		{
 			InitializeComponent();
-			_ai = new QLearningTicTacToeAI();
-			var evolver = new Evolver(_ai, new RandomIai());
-			evolver.PlayGames(StatisticsGraph.GamesToPlay);
 		}
 
 		/// <summary>
@@ -31,9 +25,9 @@ namespace tictactoe_cs
 		/// </summary>
 		private void button2_Click(object sender, EventArgs e)
 		{
+			_qPlayer = new MyOwnPlayer();
 			_qPlayer.Learn();
-			//var window = new StatisticsGraph();
-			//window.Show();
+			Stats.Print(_qPlayer);
 		}
 
 		/// <summary>
