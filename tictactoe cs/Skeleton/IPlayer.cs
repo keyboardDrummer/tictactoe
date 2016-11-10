@@ -2,7 +2,7 @@
 {
 	public interface IPlayer
 	{
-		int Play(Board board, int moveFor);
+		int Play(Board board, int player);
 		void Learn();
 	}
 }

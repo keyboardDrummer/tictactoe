@@ -7,7 +7,7 @@ namespace tictactoe_cs
 		public static void Print(IPlayer player)
 		{
 			var qplayer = player;
-			var rplayer = new THandPlayer(); // new RandomPlayer();
+			var rplayer = new RandomPlayer(); // new THandPlayer();
 
 			var game = new TicTacToeGame();
 			var qplayerWins1 = 0;

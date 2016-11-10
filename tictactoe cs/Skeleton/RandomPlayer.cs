@@ -6,7 +6,7 @@ namespace tictactoe_cs
 	{
 		public Random Rnd { get; set; } = new Random();
 
-		public virtual int Play(Board board, int moveFor)
+		public virtual int Play(Board board, int player)
 		{
 			var validMoves = board.GetValidMoves();
 			var move = validMoves[Rnd.Next(validMoves.Length)];

@@ -61,9 +61,9 @@
     <Compile Include="IMPLEMENT_ME.cs" />
     <Compile Include="Skeleton\Board.cs" />
     <Compile Include="Skeleton\IPlayer.cs" />
-    <Compile Include="Skeleton\Program.cs" />
+    <Compile Include="Skeleton\Stats.cs" />
     <Compile Include="Skeleton\RandomPlayer.cs" />
-    <Compile Include="Skeleton\THandPlayer.cs" />
+    <Compile Include="THandPlayer.cs" />
     <Compile Include="Skeleton\TicTacToeGame.cs" />
     <EmbeddedResource Include="Ignore\game.resx">
       <DependentUpon>game.cs</DependentUpon>
