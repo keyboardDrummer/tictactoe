@@ -96,6 +96,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QLearner.cs" />
     <Compile Include="QLearningTicTacToeAI.cs" />
+    <Compile Include="qlttt\Board.cs" />
+    <Compile Include="qlttt\IPlayer.cs" />
+    <Compile Include="qlttt\Program.cs" />
+    <Compile Include="qlttt\QPlayer.cs" />
+    <Compile Include="qlttt\RandomPlayer.cs" />
+    <Compile Include="qlttt\THandPlayer.cs" />
+    <Compile Include="qlttt\TicTacToeGame.cs" />
     <Compile Include="RandomIai.cs" />
     <Compile Include="Statistics.cs" />
     <EmbeddedResource Include="Ignore\game.resx">

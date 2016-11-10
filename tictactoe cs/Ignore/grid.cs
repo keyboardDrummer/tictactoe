@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.CSharp.RuntimeBinder;
+using qlttt;
 
 namespace tictactoe_cs
 {
-	class Grid : System.Windows.Forms.Panel, IBoard
+	public class Grid : System.Windows.Forms.Panel, IBoard
 	{
-		readonly cell[][] _matrix = new cell[3][];
+		public readonly cell[][] Matrix = new cell[3][];
 		char first = 'X';
 		char current = 'X';
 		bool gameOver;
 		int moveCounter;
-		IAI _iai;
+		IPlayer _iai;
 
 		public CellValue GetPosition(Position position)
 		{
-			switch (_matrix[position.R][position.C].display)
+			switch (Matrix[position.R][position.C].display)
 			{
 				case ' ':
 					return CellValue.Empty;
@@ -34,15 +34,15 @@ namespace tictactoe_cs
 			this.Size = new Size(210, 210);
 			for (int r = 0; r < 3; r++)
 			{
-				_matrix[r] = new cell[3];
+				Matrix[r] = new cell[3];
 			}
 			for (int r = 0; r < 3; r++)
 			{
 				for (int c = 0; c < 3; c++)
 				{
-					_matrix[r][c] = new cell();
-					_matrix[r][c].display = ' ';
-					_matrix[r][c].color = Color.Black;
+					Matrix[r][c] = new cell();
+					Matrix[r][c].display = ' ';
+					Matrix[r][c].color = Color.Black;
 				}
 			}
 		}
@@ -53,9 +53,9 @@ namespace tictactoe_cs
 			{
 				int r = (int) Math.Floor((double) e.Y/70);
 				int c = (int) Math.Floor((double) e.X/70);
-				if (_matrix[r][c].display == ' ')
+				if (Matrix[r][c].display == ' ')
 				{
-					_matrix[r][c].display = current;
+					Matrix[r][c].display = current;
 					current = '0';
 					Invalidate();
 					moveCounter++;
@@ -82,10 +82,10 @@ namespace tictactoe_cs
 			{
 				for (int c = 0; c < 3; c++)
 				{
-					if (_matrix[r][c].display != ' ')
+					if (Matrix[r][c].display != ' ')
 					{
-						e.Graphics.DrawString(_matrix[r][c].display.ToString(), new Font("Times New Roman", 20, FontStyle.Bold),
-							new SolidBrush(_matrix[r][c].color), (float) ((c*70) + 25), (float) ((r*70) + 25));
+						e.Graphics.DrawString(Matrix[r][c].display.ToString(), new Font("Times New Roman", 20, FontStyle.Bold),
+							new SolidBrush(Matrix[r][c].color), (float) ((c*70) + 25), (float) ((r*70) + 25));
 					}
 				}
 			}
@@ -96,38 +96,38 @@ namespace tictactoe_cs
 		{
 			for (int r = 0; r < 3; r++)
 			{
-				if (_matrix[r][0].display != ' ' && _matrix[r][0].display == _matrix[r][1].display &&
-				    _matrix[r][0].display == _matrix[r][2].display)
+				if (Matrix[r][0].display != ' ' && Matrix[r][0].display == Matrix[r][1].display &&
+				    Matrix[r][0].display == Matrix[r][2].display)
 				{
-					_matrix[r][0].color = _matrix[r][1].color = _matrix[r][2].color = Color.Red;
+					Matrix[r][0].color = Matrix[r][1].color = Matrix[r][2].color = Color.Red;
 					return true;
 				}
 			}
 			for (int c = 0; c < 3; c++)
 			{
-				if (_matrix[0][c].display != ' ' && _matrix[0][c].display == _matrix[1][c].display &&
-				    _matrix[0][c].display == _matrix[2][c].display)
+				if (Matrix[0][c].display != ' ' && Matrix[0][c].display == Matrix[1][c].display &&
+				    Matrix[0][c].display == Matrix[2][c].display)
 				{
-					_matrix[0][c].color = _matrix[1][c].color = _matrix[2][c].color = Color.Red;
+					Matrix[0][c].color = Matrix[1][c].color = Matrix[2][c].color = Color.Red;
 					return true;
 				}
 			}
-			if (_matrix[0][0].display != ' ' && _matrix[0][0].display == _matrix[1][1].display &&
-			    _matrix[0][0].display == _matrix[2][2].display)
+			if (Matrix[0][0].display != ' ' && Matrix[0][0].display == Matrix[1][1].display &&
+			    Matrix[0][0].display == Matrix[2][2].display)
 			{
-				_matrix[0][0].color = _matrix[1][1].color = _matrix[2][2].color = Color.Red;
+				Matrix[0][0].color = Matrix[1][1].color = Matrix[2][2].color = Color.Red;
 				return true;
 			}
-			if (_matrix[0][2].display != ' ' && _matrix[0][2].display == _matrix[1][1].display &&
-			    _matrix[0][2].display == _matrix[2][0].display)
+			if (Matrix[0][2].display != ' ' && Matrix[0][2].display == Matrix[1][1].display &&
+			    Matrix[0][2].display == Matrix[2][0].display)
 			{
-				_matrix[0][2].color = _matrix[1][1].color = _matrix[2][0].color = Color.Red;
+				Matrix[0][2].color = Matrix[1][1].color = Matrix[2][0].color = Color.Red;
 				return true;
 			}
 			return false;
 		}
 
-		public void NewGame(IAI ai)
+		public void NewGame(IPlayer ai)
 		{
 			_iai = ai;
 			gameOver = false;
@@ -135,8 +135,8 @@ namespace tictactoe_cs
 			{
 				for (int c = 0; c < 3; c++)
 				{
-					_matrix[r][c].display = ' ';
-					_matrix[r][c].color = Color.Black;
+					Matrix[r][c].display = ' ';
+					Matrix[r][c].color = Color.Black;
 				}
 			}
 			first = first == 'X' ? '0' : 'X';
@@ -151,11 +151,10 @@ namespace tictactoe_cs
 
 		public void PlayMove()
 		{
-			var aiChoice = _iai.Step(this);
-			var cell = _matrix[aiChoice.R][aiChoice.C];
+			var aiChoice = _iai.Play(new qlttt.Board(this), first == 'X' ? 2 : 1);
+			var cell = Matrix[aiChoice/3][aiChoice%3];
 			if (cell.display == ' ')
 			{
-
 				cell.display = '0';
 				current = 'X';
 				gameOver = CheckLines();
