@@ -23,7 +23,7 @@ namespace tictactoe_cs.Ignore
 		}
 
 		readonly IList<Statistics> _statistics = new List<Statistics>();
-		const int GamesToPlay = 10000;
+		const int GamesToPlay = 100000;
 		const int MaxY = 1000;
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -41,6 +41,8 @@ namespace tictactoe_cs.Ignore
 		{
 			int x = 0;
 			int y = 0;
+			int dx = 0;
+			int dy = 0;
 			graphics.DrawLine(new Pen(Brushes.Gray), new Point(0, 0), new Point(GamesToPlay, 0));
 			graphics.DrawLine(new Pen(Brushes.Gray), new Point(0, MaxY/2), new Point(GamesToPlay, MaxY/2));
 			graphics.DrawLine(new Pen(Brushes.Gray), new Point(0, MaxY), new Point(GamesToPlay, MaxY));
@@ -57,6 +59,12 @@ namespace tictactoe_cs.Ignore
 				graphics.DrawLine(new Pen(Brushes.Black), new Point(x, MaxY - y), new Point(newX, MaxY - newY));
 				y = newY;
 				x = newX;
+
+				var newdY = (int) (statistic.DrawPercentage*MaxY);
+				var newdX = dx + 1;
+				graphics.DrawLine(new Pen(Brushes.Green), new Point(dx, MaxY - dy), new Point(newdX, MaxY - newdY));
+				dy = newdY;
+				dx = newdX;
 			}
 		}
 
