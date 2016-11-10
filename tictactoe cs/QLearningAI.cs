@@ -60,19 +60,21 @@ namespace tictactoe_cs
 
 		private int ChooseAction(string state)
 		{
-			var actions = StateActionRewards[state];
+			var validActions = state.Select((c, i) => new {c, i}).Where(ci => ci.c == ' ').Select(ci => ci.i);
+			var actions = StateActionRewards[state].Where(kv => validActions.Contains(kv.Key))
+				.ToDictionary(kv => kv.Key, kv => kv.Value);
 			double total = actions.Values.Sum();
 			var normalizedRewards = actions.Select(kv => new {kv.Key, Value = kv.Value/total})
 				.ToDictionary(kv => kv.Key, kv => kv.Value);
-			for (int i = 1; i < 9; i++)
+			double currentSumReward = 0.0;
+			foreach (int i in validActions)
 			{
-				normalizedRewards[i] += normalizedRewards[i - 1];
+				currentSumReward += normalizedRewards[i];
+				normalizedRewards[i] = currentSumReward;
 			}
 			double randomAction = random.NextDouble();
 			int action =
-				normalizedRewards.Select((kv, i) => new {KeyValue = kv, Action = i})
-					.First(kva => kva.KeyValue.Value > randomAction)
-					.Action;
+				normalizedRewards.First(kv => kv.Value > randomAction).Key;
 			return action;
 		}
 
@@ -81,7 +83,7 @@ namespace tictactoe_cs
 			string state = ToState(endGame);
 			int action = choice.R*3 + choice.C;
 			string previousState = state.Remove(action, 1).Insert(action, " ");
-			double maxRewardNextStep = youWon ? 1.0 : StateActionRewards[state].Values.Max(v => v);
+			double maxRewardNextStep = 0.0; // youWon ? 1.0 : StateActionRewards[state].Values.Max(v => v);
 			UpdateReward(previousState, action, youWon ? 1.0 : _initialReward, maxRewardNextStep);
 		}
 

@@ -1,4 +1,6 @@
-﻿namespace tictactoe_cs
+﻿using System;
+
+namespace tictactoe_cs
 {
 	class Board : IBoard
 	{
@@ -11,6 +13,9 @@
 
 		public void Set(Position position, bool cross)
 		{
+			if (board[position.R, position.C] != null)
+				throw new NotSupportedException("Stepping on another player's move!");
+
 			board[position.R, position.C] = cross;
 		}
 	}
